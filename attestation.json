@@ -1,0 +1,9 @@
+{
+  "pluginId": "neobase.obs",
+  "repo": "NDesumeur/neobase-plugin-obs",
+  "version": "1.0.1",
+  "sha256": "b08c2e181b1b2679f295bf14bb5336829ee6debc9eb89d68a521ac69740f1b9e",
+  "approvedAt": "2026-10-31T17:51:20.973Z",
+  "neobase": ">=4.0.0",
+  "signature": "1txkbLy6Yx2zJUOtg8op4fZvvIjrGiMJjowev3DQZFtnN2x1VFotxFCEFzGkKMzgL/p1roq3GpsHsmrB+rnLBw=="
+}
