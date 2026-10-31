@@ -1,7 +1,7 @@
 {
   "id": "neobase.obs",
   "name": "OBS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "NDesumeur",
   "description": "Pilote OBS Studio (WebSocket) : scènes, audio, aperçu du programme, démarrage du direct.",
   "icon": "icon.png",

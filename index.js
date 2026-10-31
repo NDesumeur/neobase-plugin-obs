@@ -2,12 +2,35 @@
 // Ses données sont dans le dossier du plugin, que NeoBase sauvegarde (synchro cloud et sauvegardes) ; à la première ouverture elle reprend ce que tu avais dans NeoBase.
 // Elle demande l'accès complet pour utiliser les outils d'interface de NeoBase. NeoBase ne l'ouvre que si elle est signée.
 const HTML = "<div class=\"appWrap obWrap\">\n      <div class=\"agHead\"><span class=\"label\">OBS</span><span class=\"hint\" id=\"obInfo\"></span><div class=\"agNav\"><button class=\"btn px\" id=\"obLaunch\" title=\"Démarre OBS Studio\">LANCER OBS</button><button class=\"btn main px\" id=\"obConnectBtn\">CONNEXION</button></div></div>\n      <div id=\"obSetup\" class=\"sysCard px obSetup\"><span class=\"label\">Connexion à OBS</span>\n        <div class=\"hint\">Dans OBS : <b>Outils › Paramètres du serveur WebSocket</b> › coche « Activer le serveur WebSocket », puis « Afficher les infos de connexion » pour voir le port et le mot de passe. Le mot de passe reste sur ce PC.</div>\n        <div class=\"row\"><input class=\"f\" id=\"obHost\" placeholder=\"Adresse (127.0.0.1)\"><input class=\"f\" id=\"obPort\" type=\"number\" placeholder=\"Port (4455)\"><input class=\"f\" id=\"obPw\" type=\"password\" placeholder=\"Mot de passe du serveur\"><button class=\"btn main px\" id=\"obSave\">SE CONNECTER</button></div></div>\n      <div id=\"obMain\" class=\"obMain\">\n        <div class=\"obLeft\"><div class=\"obScreen px\"><img id=\"obShot\" alt=\"\"><span id=\"obLive\" class=\"obBadge\"></span><span id=\"obRec\" class=\"obBadge rec\"></span><span id=\"obCur\" class=\"obCur\"></span></div>\n          <div class=\"obCtl\"><button class=\"btn main px\" id=\"obStreamBtn\">LANCER LE LIVE</button><button class=\"btn px\" id=\"obRecBtn\">ENREGISTRER</button><button class=\"btn px\" id=\"obPauseBtn\">PAUSE</button></div>\n          <div class=\"hint\" id=\"obStats\"></div></div>\n        <div class=\"obRight\"><div class=\"sysCard px\"><span class=\"label\">Scènes</span><div id=\"obScenes\" class=\"obScenes\"></div></div><div class=\"sysCard px\"><span class=\"label\">Audio</span><div id=\"obAudio\"></div></div></div>\n      </div>\n    </div>";
+/*CSS-MOVED*/ const CSS = `.obWrap{max-width:1400px}
+.obSetup .row{flex-wrap:wrap}
+.obSetup .f{width:200px}
+#obInfo.err{color:#ff7a8a}
+.obMain{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+.obLeft{display:flex;flex-direction:column;gap:10px}
+.obScreen{position:relative;aspect-ratio:16/9;background:#000;--fill:#000;display:grid;place-items:center;overflow:hidden}
+.obScreen img{width:100%;height:100%;object-fit:contain}
+.obBadge{position:absolute;left:10px;top:10px;font:11px var(--title);padding:6px 8px;background:rgba(5,1,11,.75);color:var(--muted)}
+.obBadge.on{background:#c42a3c;color:#fff;box-shadow:0 0 12px #ff4f6d}
+.obBadge.rec{left:auto;right:10px}
+.obBadge.rec:empty{display:none}
+.obCur{position:absolute;left:10px;bottom:10px;font:10px var(--title);color:#fff;background:rgba(5,1,11,.7);padding:5px 7px}
+.obCtl{display:flex;gap:8px;flex-wrap:wrap}
+#obStreamBtn.stop{background:#c42a3c}
+.obRight{display:flex;flex-direction:column;gap:12px}
+.obScenes{display:flex;flex-direction:column;gap:6px}
+.obScene{text-align:left}
+.obA{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:center;margin:6px 0}
+.obA span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obA input{grid-column:1/-1;width:100%;accent-color:var(--magenta)}
+`;  // le style de ce plugin (il utilise les variables du thème de NeoBase)
 export default async function (ctx) {
   const view = ctx.view;
   if (!ctx.host) { view.textContent = "Ce plugin doit être approuvé par NeoBase pour s'ouvrir."; return; }
   const host = ctx.host, { el, toast, sfx, ask, newTab, pixIcon, PIX, WX } = host;
   const nbConfirm = host.confirm;  // la boîte de confirmation de NeoBase, à la place de celle de Windows
   const folder = ctx.folder, legacy = ctx.legacy || {};
+  ctx.host.addStyle(CSS);
   view.innerHTML = HTML;
   const $ = id => id === "obsApp" ? view : (view.querySelector('#' + id) || document.getElementById(id));  // les identifiants de ta vue d'abord, puis ceux de la page (fenêtres, menus)
   const doc = async n => { try { return await folder.read(n); } catch { return null; } };
